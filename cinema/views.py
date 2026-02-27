@@ -131,17 +131,17 @@ class MovieViewSet(
         parameters=[
             OpenApiParameter(
                 "title",
-                type={"type": "string", "items": {"type": "string"}},
+                type={"type": "string"},
                 description="Filter movies by title",
             ),
             OpenApiParameter(
                 "genres",
-                type={"type": "array", "items": {"type": "string"}},
+                type={"type": "string"},
                 description="Filter movies by genres",
             ),
             OpenApiParameter(
                 "actors",
-                type={"type": "array", "items": {"type": "string"}},
+                type={"type": "string"},
                 description="Filter movies by actors",
             )
         ]
@@ -193,6 +193,23 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
             return MovieSessionDetailSerializer
 
         return MovieSessionSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="date",
+                type={"type": "string", "format": "date"},
+                description="Filter sessions by date, e.g. 2026-02-27",
+            ),
+            OpenApiParameter(
+                name="movie",
+                type={"type": "integer"},
+                description="Filter sessions by movie id, e.g. 12",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class OrderPagination(PageNumberPagination):
