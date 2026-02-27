@@ -165,6 +165,9 @@ class MovieUploadImagePermissionTests(TestCase):
         self.user = get_user_model().objects.create_user(
             "user4@myproject.com", "password"
         )
+        self.admin = get_user_model().objects.create_superuser(
+            "admin-upload@myproject.com", "password"
+        )
         self.movie = sample_movie()
 
     def test_non_admin_cannot_upload_image(self):
@@ -180,7 +183,6 @@ class MovieUploadImagePermissionTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_admin_can_upload_image(self):
-        """Test admin can upload an image to movie"""
         self.client.force_authenticate(self.admin)
         url = image_upload_url(self.movie.id)
 
